@@ -15,4 +15,9 @@ class Product {
     required this.imageUrl,
     this.isFavorite = false,
   });
+
+  //Método de alternância
+  void toggleFavorite() {
+    isFavorite = !isFavorite;
+  }
 }
