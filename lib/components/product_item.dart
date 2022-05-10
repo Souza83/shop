@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop/pages/product_detail_page.dart';
 import '../models/product.dart';
 
 class ProductItem extends StatelessWidget {
@@ -14,10 +15,21 @@ class ProductItem extends StatelessWidget {
       // ClipRRect arredonda bordas
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
-        child: Image.network(
-          // Imagem da rede
-          product.imageUrl, // Caminho da imgem
-          fit: BoxFit.cover, // Para imagem cobrir a área da caixa (zoom)
+        // Detecta gesto na imagem da tela
+        child: GestureDetector(
+          child: Image.network(
+            // Imagem da rede
+            product.imageUrl, // Caminho da imgem
+            fit: BoxFit.cover, // Para imagem cobrir a área da caixa (zoom)
+          ),
+          // Detecta toque na tela
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => ProductDetailPage(product: product),
+              ),
+            );
+          },
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black54,
