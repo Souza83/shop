@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop/pages/product_detail_page.dart';
+import 'package:shop/utils/app_routes.dart';
 import '../models/product.dart';
 
 class ProductItem extends StatelessWidget {
@@ -22,12 +23,11 @@ class ProductItem extends StatelessWidget {
             product.imageUrl, // Caminho da imgem
             fit: BoxFit.cover, // Para imagem cobrir a área da caixa (zoom)
           ),
-          // Detecta toque na tela
+          // Detecta toque para navegação entre telas
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (ctx) => ProductDetailPage(product: product),
-              ),
+            Navigator.of(context).pushNamed(
+              AppRoutes.PRODUCT_DETAIL,
+              arguments: product,
             );
           },
         ),
