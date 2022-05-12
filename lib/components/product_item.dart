@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:shop/pages/product_detail_page.dart';
-import 'package:shop/utils/app_routes.dart';
+import 'package:provider/provider.dart';
 import '../models/product.dart';
+import 'package:shop/utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
-  final Product product;
-  const ProductItem({
-    Key? key,
-    required this.product,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
     return ClipRRect(
       // ClipRRect arredonda bordas
       borderRadius: BorderRadius.circular(10),
@@ -35,8 +30,11 @@ class ProductItem extends StatelessWidget {
           backgroundColor: Colors.black54,
           leading: IconButton(
             // Posiciona antes do título
-            onPressed: () {},
-            icon: Icon(Icons.favorite),
+            onPressed: () {
+              product.toggleFavorite();
+            },
+            icon: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border),
             color: Theme.of(context).accentColor,
           ),
           title: Text(

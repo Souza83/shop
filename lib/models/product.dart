@@ -1,4 +1,7 @@
-class Product {
+import 'package:flutter/material.dart';
+
+// with ChangeNotifier: mixin com classe de programção reativa
+class Product with ChangeNotifier {
   final String id;
   final String title;
   final String description;
@@ -6,7 +9,7 @@ class Product {
   final String imageUrl;
   bool isFavorite;
 
-  //Construtor
+  //Construtor Product
   Product({
     required this.id,
     required this.title,
@@ -19,5 +22,6 @@ class Product {
   //Método de alternância
   void toggleFavorite() {
     isFavorite = !isFavorite;
+    notifyListeners();
   }
 }
