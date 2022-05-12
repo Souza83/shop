@@ -6,7 +6,10 @@ import 'package:shop/utils/app_routes.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(
+      context,
+      listen: true, // Alterna a escuta da notificação ("opcional p/ true")
+    );
     return ClipRRect(
       // ClipRRect arredonda bordas
       borderRadius: BorderRadius.circular(10),
