@@ -5,6 +5,19 @@ import 'package:shop/models/product.dart';
 // ChangeNotifier: auxilia na reatividade. With: mixin da classe (add classe)
 class ProductList with ChangeNotifier {
   List<Product> _items = dummyProducts;
+
+  // [..._items]: recebe um clone da lista deixando mais seguro
+  List<Product> get items => [..._items];
+  List<Product> get favoriteItems =>
+      _items.where((prod) => prod.isFavorite).toList();
+
+  void addProduct(Product product) {
+    _items.add(product);
+    notifyListeners(); // Notifica qdo há mudança
+  }
+}
+
+/* ###### Referencia de filtro de forma Global ######
   bool _showFavoriteOnly = false;
 
   // [..._items]: recebe um clone da lista deixando mais seguro
@@ -18,16 +31,11 @@ class ProductList with ChangeNotifier {
 
   void showFavoriteOnly() {
     _showFavoriteOnly = true;
-    notifyListeners();
+    notifyListeners(); // Notifica receptores
   }
 
   void showAll() {
     _showFavoriteOnly = false;
-    notifyListeners();
+    notifyListeners(); // Notifica receptores
   }
-
-  void addProduct(Product product) {
-    _items.add(product);
-    notifyListeners(); // Notifica qdo há mudança
-  }
-}
+*/
