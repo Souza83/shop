@@ -9,7 +9,7 @@ class Cart with ChangeNotifier {
   Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {
-    return {...items}; // {...items}: gera clone em caso de acesso indevido
+    return {..._items}; // {...items}: gera clone em caso de acesso indevido
   }
 
   int get itemsCount {

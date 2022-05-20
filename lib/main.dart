@@ -28,10 +28,10 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Shop Demo',
         theme: ThemeData(
           primarySwatch: Colors.purple,
-          accentColor: Color.fromARGB(255, 30, 14, 9),
+          accentColor: Colors.deepOrange,
           fontFamily: 'Lato',
         ),
         home: ProductsOverviewPage(),
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
           AppRoutes.CART: (ctx) => CartPage(),
         },
-        //Deleta Modo Debug da tela de exibição
+        //Deleta (faixa) Modo Debug da tela de exibição
         debugShowCheckedModeBanner: false,
       ),
     );

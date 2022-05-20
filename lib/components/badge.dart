@@ -29,8 +29,8 @@ class Badge extends StatelessWidget {
             ),
             // Auxilia a deixar o circulo mais arredondado
             constraints: BoxConstraints(
-              maxHeight: 16,
-              maxWidth: 16,
+              minHeight: 16,
+              minWidth: 16,
             ),
             child: Text(
               value,
