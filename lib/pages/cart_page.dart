@@ -54,7 +54,7 @@ class CartPage extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      Provider.of<Order_List>(
+                      Provider.of<OrderList>(
                         context,
                         listen: false,
                       ).addOrder(cart);
