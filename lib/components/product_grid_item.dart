@@ -58,7 +58,7 @@ class ProductGridItem extends StatelessWidget {
                   action: SnackBarAction(
                     label: 'DESFAZER',
                     onPressed: () {
-                      print("DESFAZER");
+                      cart.removeSingleItem(product.id);
                     },
                   ),
                 ),
