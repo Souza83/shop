@@ -40,6 +40,17 @@ class _ProductFormPageState extends State<ProductFormPage> {
     setState(() {}); // Atualiza o fomulário mostrando imagem da URL
   }
 
+  //Verifica validação da url
+  //Uri.tryParse = posssivel validar url? hasAbsolutePath = caminho absoluto
+  bool isValidImageUrl(String url) {
+    bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false; //Señ = falso
+    //Padroniza em letras minúsculas e verifica extenção da imagem
+    bool endsWithFile = url.toLowerCase().endsWith('.png') ||
+        url.toLowerCase().endsWith('.jpg') ||
+        url.toLowerCase().endsWith('.jpeg');
+    return isValidUrl && endsWithFile;
+  }
+
   void _submitForm() {
     // validate: valida formulário. Como currentState? é opcional, se ñ = falso
     final isValid = _formKey.currentState?.validate() ?? false;
@@ -117,6 +128,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 },
                 onSaved: (price) => _formData['price'] =
                     double.parse(price ?? '0'), // ??: Senão campo recebe 0
+                validator: (_price) {
+                  final priceString = _price ?? '';
+                  final price = double.tryParse(priceString) ?? -1;
+
+                  if (price <= 0) {
+                    return 'Informe um preço válido!';
+                  }
+
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Descrição'),
@@ -125,6 +146,21 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 maxLines: 3,
                 onSaved: (description) =>
                     _formData['description'] = description ?? '', // ??: Senão
+                validator: (_description) {
+                  final description = _description ?? '';
+
+                  //trim = retira os espaços em branco, isEmpty = é vazio
+                  if (description.trim().isEmpty) {
+                    return 'Descrição é obrigatória!';
+                  }
+
+                  //length < 3 = mínimo de 3 letras
+                  if (description.trim().length < 10) {
+                    return 'Descrição precisa no mínimo de 10 letras!';
+                  }
+
+                  return null;
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -140,6 +176,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       onFieldSubmitted: (_) => _submitForm(),
                       onSaved: (imageUrl) =>
                           _formData['imageUrl'] = imageUrl ?? '', // ??: Senão
+                      validator: (_imageUrl) {
+                        final imageUrl = _imageUrl ?? '';
+                        if (!isValidImageUrl(imageUrl)) {
+                          return 'Informe uma URL válida!';
+                        }
+
+                        //Se válido retorna nulo, ou seja, url válida
+                        return null;
+                      },
                     ),
                   ),
                   Container(
@@ -173,3 +218,5 @@ class _ProductFormPageState extends State<ProductFormPage> {
     );
   }
 }
+//URL de Teste:
+//https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_960_720.png
