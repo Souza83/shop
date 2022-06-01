@@ -41,7 +41,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   void _submitForm() {
-    _formKey.currentState?.save(); // currentState"?": chama se disponível
+    // validate: valida formulário. Como currentState? é opcional, se ñ = falso
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    //Se falso retorna e não executa o metodo p/ submeter formulário
+    if (!isValid) {
+      return;
+    }
+
+    _formKey.currentState?.save(); // currentState"?": se disponível e salva
     //print(_formData.values); // Obtem os valores do fomulario no console
     final newProduct = Product(
       id: Random().nextDouble().toString(),
@@ -81,6 +89,21 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   FocusScope.of(context).requestFocus(_priceFocus);
                 },
                 onSaved: (name) => _formData['name'] = name ?? '', // ??: Senão
+                validator: (_name) {
+                  final name = _name ?? '';
+
+                  //trim = retira os espaços em branco, isEmpty = é vazio
+                  if (name.trim().isEmpty) {
+                    return 'Nome é obrigatório';
+                  }
+
+                  //length < 3 = mínimo de 3 letras
+                  if (name.trim().length < 3) {
+                    return 'Nome precisa no mínimo de 3 letras.';
+                  }
+
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Preço'),
