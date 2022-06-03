@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:shop/models/product.dart';
+import 'package:provider/provider.dart';
+import '../models/product_list.dart';
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({Key? key}) : super(key: key);
@@ -61,18 +63,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
 
     _formKey.currentState?.save(); // currentState"?": se disponível e salva
-    //print(_formData.values); // Obtem os valores do fomulario no console
-    final newProduct = Product(
-      id: Random().nextDouble().toString(),
-      name: _formData['name'] as String,
-      description: _formData['description'] as String,
-      price: _formData['price'] as double,
-      imageUrl: _formData['imageUrl'] as String,
-    );
 
-    print('Id: ${newProduct.id}');
-    print('Nome: ${newProduct.name}');
-    print('Preço: ${newProduct.price}');
+    Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).addProductFromData(_formData);
+    Navigator.of(context).pop(); // Volta para tela anterior após add produto
   }
 
   @override
