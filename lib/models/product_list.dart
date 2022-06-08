@@ -40,7 +40,8 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) {
     final future = http.post(
-      Uri.parse('$_baseUrl/products.json'),
+      Uri.parse(
+          '$_baseUrl/products.json'), // Firebase convenciona o uso do .json
       body: jsonEncode(
         {
           "name": product.name,
@@ -55,16 +56,14 @@ class ProductList with ChangeNotifier {
     // future.then: apenas futuramente for resolvido a resposta
     return future.then<void>((response) {
       final id = jsonDecode(response.body)['name'];
-      _items.add(
-        Product(
-          id: id,
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          imageUrl: product.imageUrl,
-          isFavorite: product.isFavorite,
-        ),
-      );
+      _items.add(Product(
+        id: id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        isFavorite: product.isFavorite,
+      ));
       notifyListeners(); // Notifica qdo há mudança )
     });
   }
