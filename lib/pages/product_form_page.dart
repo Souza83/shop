@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shop/models/product.dart';
 import 'package:provider/provider.dart';
-import '../models/product_list.dart';
+import 'package:shop/models/product_list.dart';
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({Key? key}) : super(key: key);
@@ -76,7 +76,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     return isValidUrl && endsWithFile;
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     // validate: valida formulário. Como currentState? é opcional, se ñ = falso
     final isValid = _formKey.currentState?.validate() ?? false;
 
@@ -89,11 +89,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     setState(() => _isLoading = true);
 
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).saveProduct(_formData).catchError((error) {
-      return showDialog<void>(
+    try {
+      await Provider.of<ProductList>(
+        context,
+        listen: false,
+      ).saveProduct(_formData);
+
+      Navigator.of(context).pop(); // Volta para tela anterior após add produto
+    } catch (error) {
+      await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text('Ocorreu um erro!'),
@@ -106,10 +110,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
           ],
         ),
       );
-    }).then((value) {
+    } finally {
       setState(() => _isLoading = false);
-      Navigator.of(context).pop();
-    }); // Volta para tela anterior após add produto
+    }
   }
 
   @override
@@ -261,5 +264,3 @@ class _ProductFormPageState extends State<ProductFormPage> {
     );
   }
 }
-//URL de Teste:
-//https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_960_720.png

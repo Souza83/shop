@@ -38,10 +38,11 @@ class ProductList with ChangeNotifier {
     }
   }
 
-  Future<void> addProduct(Product product) {
-    final future = http.post(
-      Uri.parse(
-          '$_baseUrl/products.json'), // Firebase convenciona o uso do .json
+  // async: Função assincrona | await: Aguardar
+  Future<void> addProduct(Product product) async {
+    final response = await http.post(
+      // Firebase convenciona o uso do .json
+      Uri.parse('$_baseUrl/products.json'),
       body: jsonEncode(
         {
           "name": product.name,
@@ -52,20 +53,18 @@ class ProductList with ChangeNotifier {
         },
       ),
     );
-
-    // future.then: apenas futuramente for resolvido a resposta
-    return future.then<void>((response) {
-      final id = jsonDecode(response.body)['name'];
-      _items.add(Product(
+    final id = jsonDecode(response.body)['name'];
+    _items.add(
+      Product(
         id: id,
         name: product.name,
         description: product.description,
         price: product.price,
         imageUrl: product.imageUrl,
         isFavorite: product.isFavorite,
-      ));
-      notifyListeners(); // Notifica qdo há mudança )
-    });
+      ),
+    );
+    notifyListeners(); // Notifica qdo há mudança )
   }
 
   Future<void> updateProduct(Product product) {
