@@ -8,7 +8,8 @@ import 'package:shop/models/product.dart';
 
 // ChangeNotifier: auxilia na reatividade. With: mixin da classe (add classe)
 class ProductList with ChangeNotifier {
-  final _baseUrl = 'https://shop-cod3r-fac4a-default-rtdb.firebaseio.com/';
+  final _url =
+      'https://shop-cod3r-fac4a-default-rtdb.firebaseio.com/products.json';
   List<Product> _items = dummyProducts;
 
   // [..._items]: recebe um clone da lista deixando mais seguro
@@ -18,6 +19,12 @@ class ProductList with ChangeNotifier {
 
   int get itemsCount {
     return _items.length;
+  }
+
+  // Obtem as informações do firebase
+  Future<void> loadProducts() async {
+    final response = await http.get(Uri.parse(_url));
+    print(jsonDecode(response.body));
   }
 
   Future<void> saveProduct(Map<String, Object> data) {
@@ -42,7 +49,7 @@ class ProductList with ChangeNotifier {
   Future<void> addProduct(Product product) async {
     final response = await http.post(
       // Firebase convenciona o uso do .json
-      Uri.parse('$_baseUrl/products.json'),
+      Uri.parse(_url),
       body: jsonEncode(
         {
           "name": product.name,
