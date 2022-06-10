@@ -251,8 +251,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                           ),
                           alignment: Alignment.center,
                           child: _imageUrlController.text.isEmpty // Se vasio
-                              ? Text(
-                                  'Informe a URL') // Se verdadeiro. Mostra o texto
+                              ? Text('Informe a URL')
                               : Image.network(_imageUrlController.text),
                         ),
                       ],

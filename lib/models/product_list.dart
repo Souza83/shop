@@ -22,6 +22,7 @@ class ProductList with ChangeNotifier {
 
   // Obtem as informações do firebase
   Future<void> loadProducts() async {
+    _items.clear(); // Limpa a lista (corrige erro de duplicação de produtos)
     final response = await http.get(Uri.parse(_url));
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
