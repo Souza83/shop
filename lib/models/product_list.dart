@@ -3,14 +3,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop/data/dummy_data.dart';
 import 'package:shop/models/product.dart';
 
 // ChangeNotifier: auxilia na reatividade. With: mixin da classe (add classe)
 class ProductList with ChangeNotifier {
   final _url =
       'https://shop-cod3r-fac4a-default-rtdb.firebaseio.com/products.json';
-  List<Product> _items = dummyProducts;
+  List<Product> _items = [];
 
   // [..._items]: recebe um clone da lista deixando mais seguro
   List<Product> get items => [..._items];
@@ -24,7 +23,21 @@ class ProductList with ChangeNotifier {
   // Obtem as informações do firebase
   Future<void> loadProducts() async {
     final response = await http.get(Uri.parse(_url));
-    print(jsonDecode(response.body));
+    if (response.body == 'null') return;
+    Map<String, dynamic> data = jsonDecode(response.body);
+    data.forEach((productid, productData) {
+      _items.add(
+        Product(
+          id: productid,
+          name: productData['name'],
+          description: productData['description'],
+          price: productData['price'],
+          imageUrl: productData['imageUrl'],
+          isFavorite: productData['isFavorite'],
+        ),
+      );
+    });
+    notifyListeners();
   }
 
   Future<void> saveProduct(Map<String, Object> data) {
