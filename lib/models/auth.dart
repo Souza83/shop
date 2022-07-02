@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop/exceptions/auth_exception.dart';
 
 class Auth with ChangeNotifier {
   // Consultar firebase.google.com/docs | Firebase Auth REST API | Sign up with email / password
@@ -20,15 +20,20 @@ class Auth with ChangeNotifier {
         'returnSecureToken': true,
       }),
     );
+    final body = jsonDecode(response.body);
 
-    print(jsonDecode(response.body));
+    if (body['error'] != null) {
+      throw AuthException(body['error']['message']);
+    }
+
+    print(body);
   }
 
   Future<void> signup(String email, String password) async {
-    _authenticate(email, password, 'signUp');
+    return _authenticate(email, password, 'signUp');
   }
 
   Future<void> login(String email, String password) async {
-    _authenticate(email, password, 'signInWithPassword');
+    return _authenticate(email, password, 'signInWithPassword');
   }
 }
