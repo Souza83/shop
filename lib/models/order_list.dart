@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +11,11 @@ class OrderList with ChangeNotifier {
   final String _token;
   List<Order> _items = [];
 
-  OrderList(this._token, this._items);
+  // Parâmetros opcionais recebendo vazio
+  OrderList([
+    this._token = '',
+    this._items = const [],
+  ]);
 
   List<Order> get items {
     return [..._items];

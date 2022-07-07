@@ -10,6 +10,7 @@ import 'package:shop/utils/constants.dart';
 // ChangeNotifier: auxilia na reatividade. With: mixin da classe (add classe)
 class ProductList with ChangeNotifier {
   final String _token;
+  final String _userId;
   List<Product> _items = [];
 
   // [..._items]: recebe um clone da lista deixando mais seguro
@@ -17,7 +18,12 @@ class ProductList with ChangeNotifier {
   List<Product> get favoriteItems =>
       _items.where((prod) => prod.isFavorite).toList();
 
-  ProductList(this._token, this._items);
+  // = '' | []: Por ser opcional podem receber uma lista vazia
+  ProductList([
+    this._token = '',
+    this._userId = '',
+    this._items = const [],
+  ]);
 
   int get itemsCount {
     return _items.length;
@@ -26,14 +32,26 @@ class ProductList with ChangeNotifier {
   // Obtem as informações do firebase
   Future<void> loadProducts() async {
     _items.clear(); // Limpa a lista (corrige erro de duplicação de produtos)
+
     final response = await http.get(
       Uri.parse(
         '${Constants.PRODUCT_BASE_URL}.json?auth=$_token',
       ),
     );
     if (response.body == 'null') return;
+
+    final favResponse = await http.get(
+      Uri.parse(
+        '${Constants.USER_FAVORITES_URL}/$_userId.json?auth=$_token',
+      ),
+    );
+
+    Map<String, dynamic> favData =
+        favResponse.body == 'null' ? {} : jsonDecode(favResponse.body);
+
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productid, productData) {
+      final isFavorite = favData[productid] ?? false;
       _items.add(
         Product(
           id: productid,
@@ -41,6 +59,7 @@ class ProductList with ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           imageUrl: productData['imageUrl'],
+          isFavorite: isFavorite,
         ),
       );
     });
