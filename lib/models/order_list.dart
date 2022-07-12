@@ -9,11 +9,13 @@ import 'package:shop/utils/constants.dart';
 
 class OrderList with ChangeNotifier {
   final String _token;
+  final String _userId;
   List<Order> _items = [];
 
   // Parâmetros opcionais recebendo vazio
   OrderList([
     this._token = '',
+    this._userId = '',
     this._items = const [],
   ]);
 
@@ -30,7 +32,7 @@ class OrderList with ChangeNotifier {
 
     final response = await http.get(
       Uri.parse(
-        '${Constants.ORDER_BASE_URL}.json?auth=$_token',
+        '${Constants.ORDER_BASE_URL}/$_userId.json?auth=$_token',
       ),
     );
     if (response.body == 'null') return;
@@ -63,7 +65,7 @@ class OrderList with ChangeNotifier {
     final response = await http.post(
       // Firebase convenciona o uso do .json
       Uri.parse(
-        '${Constants.ORDER_BASE_URL}.json?auth=$_token',
+        '${Constants.ORDER_BASE_URL}/$_userId.json?auth=$_token',
       ),
       body: jsonEncode(
         {
