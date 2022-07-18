@@ -12,7 +12,8 @@ class AuthForm extends StatefulWidget {
   _AuthFormState createState() => _AuthFormState();
 }
 
-class _AuthFormState extends State<AuthForm> {
+class _AuthFormState extends State<AuthForm>
+    with SingleTickerProviderStateMixin {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -22,15 +23,50 @@ class _AuthFormState extends State<AuthForm> {
     'password': '',
   };
 
+  AnimationController? _controller;
+  Animation<Size>? _heightAnimation;
+
   bool _isLogin() => _authMode == AuthMode.Login; // Método login
   bool _isSignup() => _authMode == AuthMode.Signup; // Método Registro
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 300,
+      ),
+    );
+
+    _heightAnimation = Tween(
+      begin: Size(double.infinity, 310),
+      end: Size(double.infinity, 400),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller!,
+        curve: Curves.linear,
+      ),
+    );
+
+    _heightAnimation?.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller?.dispose(); // Libera qdo disponível
+  }
 
   void _switchAuthMode() {
     setState(() {
       if (_isLogin()) {
         _authMode = AuthMode.Signup;
+        _controller?.forward(); // Faz animação para frente
       } else {
         _authMode = AuthMode.Login;
+        _controller?.reverse(); // Faz animação reversa
       }
     });
   }
@@ -99,7 +135,8 @@ class _AuthFormState extends State<AuthForm> {
       ),
       child: Container(
         padding: const EdgeInsets.all(16),
-        height: _isLogin() ? 310 : 400, // Tá na tela login? 300 px, señ 400 px
+        //height: _isLogin() ? 310 : 400, // Tá na tela login? 300 px, señ 400 px
+        height: _heightAnimation?.value.height ?? (_isLogin() ? 310 : 400),
         width: deveceSize.width * 0.75, // Largura de 75% do tamanho da tela
         child: Form(
           key: _formKey,
