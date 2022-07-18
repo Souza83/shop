@@ -50,7 +50,7 @@ class _AuthFormState extends State<AuthForm>
       ),
     );
 
-    _heightAnimation?.addListener(() => setState(() {}));
+    // _heightAnimation?.addListener(() => setState(() {}));
   }
 
   @override
@@ -133,11 +133,15 @@ class _AuthFormState extends State<AuthForm>
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        //height: _isLogin() ? 310 : 400, // Tá na tela login? 300 px, señ 400 px
-        height: _heightAnimation?.value.height ?? (_isLogin() ? 310 : 400),
-        width: deveceSize.width * 0.75, // Largura de 75% do tamanho da tela
+      child: AnimatedBuilder(
+        animation: _heightAnimation!,
+        builder: (ctx, childForm) => Container(
+          padding: const EdgeInsets.all(16),
+          //height: _isLogin() ? 310 : 400, // Tá na tela login? 300 px, señ 400 px
+          height: _heightAnimation?.value.height ?? (_isLogin() ? 310 : 400),
+          width: deveceSize.width * 0.75, // Largura de 75% do tamanho da tela
+          child: childForm,
+        ),
         child: Form(
           key: _formKey,
           child: Column(
