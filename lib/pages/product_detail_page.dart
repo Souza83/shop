@@ -20,9 +20,12 @@ class ProductDetailPage extends StatelessWidget {
             Container(
               height: 300,
               width: double.infinity, // Ocupa a largura inteira
-              child: Image.network(
-                product.imageUrl,
-                fit: BoxFit.cover, // Se adapta no tamanho
+              child: Hero(
+                tag: product.id,
+                child: Image.network(
+                  product.imageUrl,
+                  fit: BoxFit.cover, // Se adapta no tamanho
+                ),
               ),
             ),
             SizedBox(height: 10),
